@@ -11,7 +11,7 @@
 
         "${workspaceFolder}/build/include/**"
       ],
-      "compilerPath": "${env:XTENSA_LX106_PATH}/xtensa-lx106-elf-g++",
+      //"compilerPath": "${env:XTENSA_LX106_PATH}/xtensa-lx106-elf-g++",
       "cStandard": "c17",
       "cppStandard": "c++17",
       "intelliSenseMode": "gcc-x86"
