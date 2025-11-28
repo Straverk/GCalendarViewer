@@ -37,5 +37,12 @@
 *.out
 *.app
 
-# debug information files
+# Debug information files
 *.dwo
+
+# Build folder
+build
+
+# Sdk configuration
+sdkconfig
+sdkconfig.old

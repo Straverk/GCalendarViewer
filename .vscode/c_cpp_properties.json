@@ -1,0 +1,21 @@
+{
+  "configurations": [
+    {
+      "name": "ESP8266",
+      "includePath": [
+        "${workspaceFolder}/**",
+        "${env:IDF_PATH}/components/**",
+        "${env:IDF_PATH}/components/freertos/include/**",
+        "${env:IDF_PATH}/components/freertos/port/esp8266/include",
+        "${env:IDF_PATH}/components/esp8266/include",
+
+        "${workspaceFolder}/build/include/**"
+      ],
+      "compilerPath": "${env:XTENSA_LX106_PATH}/xtensa-lx106-elf-g++",
+      "cStandard": "c17",
+      "cppStandard": "c++17",
+      "intelliSenseMode": "gcc-x86"
+    }
+  ],
+  "version": 4
+}
