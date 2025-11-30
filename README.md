@@ -3,7 +3,7 @@ Start development with a FreeRTOS..
 
 
 # Quickstart
-### Arch
+## Arch
 Maybe you want to install SDK with [esp8266-rtos-sdk AUR package](https://aur.archlinux.org/packages/esp8266-rtos-sdk)
 
 Or more dirty:

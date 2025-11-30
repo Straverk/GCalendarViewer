@@ -1,3 +1,4 @@
+#include "driver/gpio.h"
 #include "esp_spi_flash.h"
 #include "esp_system.h"
 #include "freertos/FreeRTOS.h"
@@ -8,25 +9,63 @@
 extern "C" void app_main();
 
 
-void app_main() {
-  printf("Hello world!\n");
+void init_lcd() {
+  
+}
 
-  /* Print chip information */
-  esp_chip_info_t chip_info;
-  esp_chip_info(&chip_info);
-  printf("This is ESP8266 chip with %d CPU cores, WiFi, ", chip_info.cores);
 
-  printf("silicon revision %d, ", chip_info.revision);
+void init_gpio() {
+  gpio_config_t io_conf;
+  io_conf.intr_type = GPIO_INTR_DISABLE;
+  io_conf.mode = GPIO_MODE_OUTPUT;
+  io_conf.pin_bit_mask = GPIO_Pin_2;
+  io_conf.pull_down_en = gpio_pulldown_t::GPIO_PULLDOWN_DISABLE;
+  io_conf.pull_up_en = gpio_pullup_t::GPIO_PULLUP_DISABLE;
+  gpio_config(&io_conf);
 
-  printf("%dMB %s flash\n", spi_flash_get_chip_size() / (1024 * 1024),
-         (chip_info.features & CHIP_FEATURE_EMB_FLASH) ? "embedded"
-                                                       : "external");
+  gpio_set_level(gpio_num_t::GPIO_NUM_2, 1);
+}
 
-  for (int i = 10; i >= 0; i--) {
-    printf("Restarting in %d seconds...\n", i);
-    vTaskDelay(1000 / portTICK_PERIOD_MS);
+static void enable_led_task(void *arg) {
+  for (;;) {
+    gpio_set_level(gpio_num_t::GPIO_NUM_2, 1);
+    vTaskDelay(pdMS_TO_TICKS(300));
   }
-  printf("Restarting now.\n");
-  fflush(stdout);
-  esp_restart();
+}
+static void disable_led_task(void *arg) {
+  for (;;) {
+    vTaskDelay(pdMS_TO_TICKS(180));
+    gpio_set_level(gpio_num_t::GPIO_NUM_2, 0);
+  }
+}
+
+
+static void monitor_task(void *arg) {
+  static char buf[512];
+
+  for (;;) {
+    vTaskList(buf);
+
+    printf("\n================ MINI TOP ================\nName\t      State "
+           "Priority  FreeStack ID\n");
+    printf("%s\n", buf);
+
+    printf("Free heap: %d bytes\n", esp_get_free_heap_size());
+    printf("---------------- -------- ----------------\n");
+
+    vTaskDelay(pdMS_TO_TICKS(20000));
+  }
+}
+
+void app_main() {
+  // Init
+  init_lcd();
+  init_gpio();
+
+
+  // Create tasks
+  xTaskCreate(enable_led_task, "Led on", 155, NULL, 10, NULL);
+  xTaskCreate(disable_led_task, "Led off", 155, NULL, 10, NULL);
+
+  xTaskCreate(monitor_task, "Monitor", 1024, NULL, 10, NULL);
 }
