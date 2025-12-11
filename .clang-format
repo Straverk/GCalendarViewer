@@ -1,2 +1,2 @@
 BasedOnStyle: LLVM
-MaxEmptyLinesToKeep: 4
+MaxEmptyLinesToKeep: 2
